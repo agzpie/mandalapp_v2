@@ -147,6 +147,7 @@ function drawBrush() {
     }
 }
 */
+
 /*
 
 	paper.install(window);
@@ -232,13 +233,17 @@ function drawShape() {
 }
 
 */
-//var canvasSize = View.size();
+var canvasSize = new Size(view.viewSize);
 
+view.on('resize', function() {
+    groupAxis.fitBounds(this.bounds);
+});
+console.log(canvasSize);
 
-//console.log(canvasSize.size());
-
-var axisX = new Path([5, 300], [600, 300]);
-var axisY = new Path([300, 5], [300, 600]);
+var axisX = new Path([0, (canvasSize.height)/2], [canvasSize.width, (canvasSize.height)/2]);
+var axisY = new Path([canvasSize.width/2, 0], [canvasSize.width/2, canvasSize.height]);
+//var axisX = new Path([5, 300], [600, 300]);
+//var axisY = new Path([300, 5], [300, 600]);
 var axisOn = 'false';
 
 var groupAxis = new Group({
