@@ -148,6 +148,7 @@ function drawBrush() {
 }
 */
 
+
 /*
 
 	paper.install(window);
@@ -233,29 +234,31 @@ function drawShape() {
 }
 
 */
+
+// TODO 
+// paths flip transform
+// paths' position relative to the axis' center
+// fix cloning after resizing
+
 var canvasSize = new Size(view.viewSize);
+var simplePath = 'true';
+var paths = new Group();
+var axisX = new Path([0, (canvasSize.height)/2], [canvasSize.width, (canvasSize.height)/2]);
+var axisY = new Path([canvasSize.width/2, 0], [canvasSize.width/2, canvasSize.height]);
+// TODO fix axisOn
+var axisOn = 'false';
 
 view.on('resize', function() {
     groupAxis.fitBounds(this.bounds);
+    paths.position = view.center;
+    view.update();
 });
 console.log(canvasSize);
 
-var axisX = new Path([0, (canvasSize.height)/2], [canvasSize.width, (canvasSize.height)/2]);
-var axisY = new Path([canvasSize.width/2, 0], [canvasSize.width/2, canvasSize.height]);
-//var axisX = new Path([5, 300], [600, 300]);
-//var axisY = new Path([300, 5], [300, 600]);
-var axisOn = 'false';
-
 var groupAxis = new Group({
     children: [axisX, axisY],
-    locked: true,
+    strokeColor: 'blue'
 });
-
-
-
-
-groupAxis.strokeColor = 'blue';
-//groupAxis.position = view.center;
 
 function showAxis(axisOn) {
     if (axisOn) {
@@ -265,11 +268,11 @@ function showAxis(axisOn) {
     }
 }
 
-var path;
 function onMouseDown(event) {
     path = new Path();
     path.strokeColor = 'black';
     path.add(event.point);
+    view.update();
 }
 
 function onResize(event) {
@@ -278,18 +281,48 @@ function onResize(event) {
     //axisY.position = view.center;
     //Project.position = view.center;
     //path.position = view.center;
+   // canvasSize = view.viewSize;
+    
 }
 
-showAxis(axisOn);
+function clonePaths(path) {
+    var path2 = path.clone();
+    var path3 = path.clone();
+    var path4 = path.clone();
+
+    var distX = canvasSize.width - path.position.x;
+    var distY = canvasSize.height - path.position.y;
+
+    var horizontalMatrix = new Matrix(-1, 0, 0, 1, 0, 0);
+    var verticalMatrix = new Matrix(1, 0, 0, -1, 0, 0);
+
+    path3.rotate(180);
+    path2.transform(horizontalMatrix);
+    path4.transform(verticalMatrix);
+    
+    path2.position.x = canvasSize.width - path.position.x;
+    path3.position.x = canvasSize.width - path.position.x;
+    path3.position.y = canvasSize.height - path.position.y;
+    path4.position.y = canvasSize.height - path.position.y;
+
+    paths.addChild(path2);
+    paths.addChild(path3);
+    paths.addChild(path4);
+}
+
+//showAxis(axisOn);
 
 window.app = {
-
-    
 
     brushTool: new Tool({
         onMouseDown: onMouseDown,
         onMouseDrag: function(event) {
             path.add(event.point);
+        },
+        onMouseUp: function(event) {
+            path.simplify(10);
+            clonePaths(path);
+            paths.addChild(path); 
         }
     }),
 
@@ -299,14 +332,23 @@ window.app = {
         onMouseDrag: function(event) {
             // Use the arcTo command to draw cloudy lines
             path.arcTo(event.point);
+        },
+        onMouseUp: function(event) {
+            clonePaths(path);
+            paths.addChild(path); 
         }
     }),
 
+    // TODO fix line cloning
     lineTool: new Tool({
         minDistance: 10,
         onMouseDown: onMouseDown,
         onMouseUp: function(event) {
             path.add(event.point);
+        },
+        onMouseUp: function(event) {
+            clonePaths(path);
+            paths.addChild(path); 
         }
     })
 };
