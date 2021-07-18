@@ -149,6 +149,7 @@ function drawBrush() {
 */
 
 
+
 /*
 
 	paper.install(window);
@@ -240,6 +241,8 @@ function drawShape() {
 // paths' position relative to the axis' center
 // fix cloning after resizing
 
+// color picker, brush size
+
 var canvasSize = new Size(view.viewSize);
 var simplePath = 'true';
 var paths = new Group();
@@ -247,6 +250,65 @@ var axisX = new Path([0, (canvasSize.height)/2], [canvasSize.width, (canvasSize.
 var axisY = new Path([canvasSize.width/2, 0], [canvasSize.width/2, canvasSize.height]);
 // TODO fix axisOn
 var axisOn = 'false';
+var strokeColor = 'black';
+var strokeWidth = 1;
+var viewColorWheel = 'true';
+
+// layers
+//var colorWheelLayer = new Layer({
+    //position: view.leftCenter,
+
+    
+//})
+
+// COLOR WHEEL
+function showWheel() {
+    var steps = {
+        hue: 100,
+        saturation: 20,
+        lightness: 3
+    };
+    for (var i = 0; i < steps.lightness; i++) {
+        var radius = view.size.width / steps.lightness * 0.45;
+        var offset = new Point(view.size.width / steps.lightness, 0);
+        var position = view.bounds.leftCenter + offset * (i + 0.5);
+        var lightness = 1 - (i + 1) / (steps.lightness + 1);
+        createWheel(position, radius, steps, lightness);
+    };
+}
+
+
+function createWheel(center, radius, steps, lightness) {
+    
+    var hUnit = 360 / steps.hue;
+    for (var h = 0; h < steps.hue; h++) {
+        var hue = h * hUnit;
+        var vector = new Point({
+            angle: hue - 90,
+            length: radius
+        });
+        path = new Path(new Point(), vector.rotate(hUnit / 2));
+        path.closed = true;
+        path.arcTo(vector, vector.rotate(hUnit / -2));
+        path.position += center;
+        var colors = [];
+        for (var i = 0; i < steps.saturation; i++) {
+            var saturation = i / steps.saturation;
+            var color = { hue: hue, saturation: saturation, lightness: lightness };
+            colors.push(color);
+        }
+        var gradient = new Gradient(colors, true);
+        var from = center;
+        var to = center + vector;
+        var gradientColor = new Color(gradient, from, to);
+        path.fillColor = path.strokeColor = gradientColor;
+    }
+}
+
+//var mandalaLayer = new Layer({
+//    children: [paths]
+//});
+
 
 view.on('resize', function() {
     groupAxis.fitBounds(this.bounds);
@@ -270,7 +332,8 @@ function showAxis(axisOn) {
 
 function onMouseDown(event) {
     path = new Path();
-    path.strokeColor = 'black';
+    path.strokeColor = strokeColor;
+    path.strokeWidth = strokeWidth;
     path.add(event.point);
     view.update();
 }
@@ -313,6 +376,37 @@ function clonePaths(path) {
 //showAxis(axisOn);
 var center;
 var radius;
+
+//console.log(strokeWidth);
+
+var strokeWidthButton = new Path.Circle({
+    center: [40, 40],
+    radius: 15,
+    fillColor: 'black'
+});
+
+strokeWidthButton.onClick = function(event) {
+    strokeWidth++;  
+}
+
+var strokeColorButton = new Path.Circle({
+    center: [40, 80],
+    radius: 15,
+    fillColor: strokeColor
+});
+
+strokeColorButton.onClick = function(event) {
+    //strokeColorButton.radius = 40;
+    console.log(viewColorWheel);
+    if (viewColorWheel == 'true') {
+        console.log(viewColorWheel);
+        showWheel();
+       viewColorWheel = 'false';
+        //colorWheelLayer.activate()
+    } else {
+        viewColorWheel = 'true';
+    }
+}
 
 window.app = {
 
@@ -360,7 +454,7 @@ window.app = {
             //view.update();
         },
         onMouseDrag: function(event) {
-            radius = event.delta.length / 2;
+            //radius = event.delta.length / 2;
 
         },
         onMouseUp: function(event) {
@@ -375,5 +469,21 @@ window.app = {
             clonePaths(path);
             paths.addChild(path); */
         }
+    }),
+
+    colorTool: new Tool({
+        onMouseDown: function(event) {
+            var path1 = new Path.Circle({
+                center: event.point,
+                radius: 25,
+                fillColor: 'black'
+            });
+        }
+
+    }),
+
+    brushSizeTool: new Tool({
+        strokeWidth: 5,
+        
     })
 };
