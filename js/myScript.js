@@ -311,6 +311,8 @@ function clonePaths(path) {
 }
 
 //showAxis(axisOn);
+var center;
+var radius;
 
 window.app = {
 
@@ -339,16 +341,39 @@ window.app = {
         }
     }),
 
-    // TODO fix line cloning
+    // TODO live line drawing? on mouse drag view update
     lineTool: new Tool({
         minDistance: 10,
         onMouseDown: onMouseDown,
         onMouseUp: function(event) {
             path.add(event.point);
+            clonePaths(path);
+            paths.addChild(path);
+        }
+    }),
+    // TODO make circle work smooth like vegan butter
+    circleTool: new Tool({
+        onMouseDown: function(event) {
+            center = event.point;
+            //path = new Path.Circle();
+            //path.add(event.point);
+            //view.update();
+        },
+        onMouseDrag: function(event) {
+            radius = event.delta.length / 2;
+
         },
         onMouseUp: function(event) {
+            var circle = new Path.Circle(event.middlePoint, radius);
+            circle.fillColor = 'black';
+           /* path = new Path.Circle({
+                center: center,
+                radius: event.point
+            }),
+            path.strokeColor = 'black';
+            path.simplify(10);
             clonePaths(path);
-            paths.addChild(path); 
+            paths.addChild(path); */
         }
     })
 };
