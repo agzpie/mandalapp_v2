@@ -1,5 +1,6 @@
 const { Path, Point, Size } = require("paperjs-v0.12.15/dist/paper-core");
 
+	window.globals = { a:50, b:-20 };
 	// Create a Paper.js Path to draw a line into it:
 	var path = new Path();
 	// Give the stroke a color

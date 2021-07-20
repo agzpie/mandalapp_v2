@@ -6,6 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" href="spectrum.css" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src='spectrum.js'></script>
+
+    <script>
+        $("#colorpicker").spectrum({
+            color: "#e8e8e8",
+            flat: true,
+            showInput: true,
+            showPalette: true,
+            showSelectionPalette: true,
+            palette: [],
+            localStorageKey: "spectrum.homepage",
+            clickoutFiresChange: true,
+            change: function(color) {
+                color.toHexString();
+            }
+        });
+
+        var colorValue = $("#colorpicker").spectrum("get").color;
+        var x;
+
+        window.globals = { colorValue, x };
+        window.onload = function() {
+            let x = Number(document.getElementById("colorpicker").value);
+        }
+        
+
+    </script>
     <script type="text/javascript" src="paperjs-v0.12.15/dist/paper-full.js"></script>
     <script type="text/paperscript" src="js/myScript.js" canvas="myCanvas"></script>
 
@@ -38,6 +67,8 @@
     <a href="#" onclick="app.circleTool.activate(); return false;">Circle</a>
     <a href="#" onclick="app.colorTool.activate(); return false;">Color</a>
     <a href="#" onclick="app.brushSizeTool.activate(); return false;">Brush Size</a>
+    <input type="color" id="colorpicker" value="#19D28B"/>
+    
     <canvas id="myCanvas" resize></canvas>
 </body>
 </html>

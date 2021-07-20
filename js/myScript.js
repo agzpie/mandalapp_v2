@@ -243,6 +243,21 @@ function drawShape() {
 
 // color picker, brush size
 
+// Create a Paper.js Path to draw a line into it:
+
+
+var strokeColorTest = [ globals.x ];
+console.log(strokeColorTest);
+
+// Use the global variables a and b defined in the JavaScript
+
+
+var pathX = new Path();
+pathX.strokeColor = strokeColorTest;
+var start = new Point(100, 200);
+pathX.moveTo(start);
+pathX.lineTo(start + [ 100, 100 ]);
+
 var canvasSize = new Size(view.viewSize);
 var simplePath = 'true';
 var paths = new Group();
@@ -250,7 +265,7 @@ var axisX = new Path([0, (canvasSize.height)/2], [canvasSize.width, (canvasSize.
 var axisY = new Path([canvasSize.width/2, 0], [canvasSize.width/2, canvasSize.height]);
 // TODO fix axisOn
 var axisOn = 'false';
-var strokeColor = 'black';
+var strokeColor = 'red';
 var strokeWidth = 1;
 var viewColorWheel = 'true';
 
@@ -287,10 +302,10 @@ function createWheel(center, radius, steps, lightness) {
             angle: hue - 90,
             length: radius
         });
-        path = new Path(new Point(), vector.rotate(hUnit / 2));
-        path.closed = true;
-        path.arcTo(vector, vector.rotate(hUnit / -2));
-        path.position += center;
+        pathC = new Path(new Point(), vector.rotate(hUnit / 2));
+        pathC.closed = true;
+        pathC.arcTo(vector, vector.rotate(hUnit / -2));
+        pathC.position += center;
         var colors = [];
         for (var i = 0; i < steps.saturation; i++) {
             var saturation = i / steps.saturation;
@@ -301,7 +316,7 @@ function createWheel(center, radius, steps, lightness) {
         var from = center;
         var to = center + vector;
         var gradientColor = new Color(gradient, from, to);
-        path.fillColor = path.strokeColor = gradientColor;
+        pathC.fillColor = pathC.strokeColor = gradientColor;
     }
 }
 
@@ -332,7 +347,7 @@ function showAxis(axisOn) {
 
 function onMouseDown(event) {
     path = new Path();
-    path.strokeColor = strokeColor;
+    path.strokeColor = strokeColorTest;
     path.strokeWidth = strokeWidth;
     path.add(event.point);
     view.update();
@@ -407,6 +422,8 @@ strokeColorButton.onClick = function(event) {
         viewColorWheel = 'true';
     }
 }
+
+
 
 window.app = {
 
