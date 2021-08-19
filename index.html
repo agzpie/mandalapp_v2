@@ -28,9 +28,10 @@
         var colorValue = $("#colorpicker").spectrum("get").color;
         var x;
 
-        window.globals = { colorValue, x };
+        //window.globals = { colorValue, x };
         window.onload = function() {
             let x = Number(document.getElementById("colorpicker").value);
+            window.color = x;
         }
         
 

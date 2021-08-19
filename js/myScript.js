@@ -240,20 +240,14 @@ function drawShape() {
 // paths flip transform
 // paths' position relative to the axis' center
 // fix cloning after resizing
-
-// color picker, brush size
-
+// color picker
 // Create a Paper.js Path to draw a line into it:
 
-
-var strokeColorTest = [ globals.x ];
-console.log(strokeColorTest);
-
-// Use the global variables a and b defined in the JavaScript
-
+//var strokeColorTest = [ globals.x ];
+//console.log(strokeColorTest);
 
 var pathX = new Path();
-pathX.strokeColor = strokeColorTest;
+//pathX.strokeColor = strokeColorTest;
 var start = new Point(100, 200);
 pathX.moveTo(start);
 pathX.lineTo(start + [ 100, 100 ]);
@@ -263,91 +257,24 @@ var simplePath = 'true';
 var paths = new Group();
 var axisX = new Path([0, (canvasSize.height)/2], [canvasSize.width, (canvasSize.height)/2]);
 var axisY = new Path([canvasSize.width/2, 0], [canvasSize.width/2, canvasSize.height]);
-// TODO fix axisOn
-var axisOn = 'false';
 var strokeColor = 'red';
 var strokeWidth = 1;
-var viewColorWheel = 'true';
-
-// layers
-//var colorWheelLayer = new Layer({
-    //position: view.leftCenter,
-
-    
-//})
-
-// COLOR WHEEL
-function showWheel() {
-    var steps = {
-        hue: 100,
-        saturation: 20,
-        lightness: 3
-    };
-    for (var i = 0; i < steps.lightness; i++) {
-        var radius = view.size.width / steps.lightness * 0.45;
-        var offset = new Point(view.size.width / steps.lightness, 0);
-        var position = view.bounds.leftCenter + offset * (i + 0.5);
-        var lightness = 1 - (i + 1) / (steps.lightness + 1);
-        createWheel(position, radius, steps, lightness);
-    };
-}
-
-
-function createWheel(center, radius, steps, lightness) {
-    
-    var hUnit = 360 / steps.hue;
-    for (var h = 0; h < steps.hue; h++) {
-        var hue = h * hUnit;
-        var vector = new Point({
-            angle: hue - 90,
-            length: radius
-        });
-        pathC = new Path(new Point(), vector.rotate(hUnit / 2));
-        pathC.closed = true;
-        pathC.arcTo(vector, vector.rotate(hUnit / -2));
-        pathC.position += center;
-        var colors = [];
-        for (var i = 0; i < steps.saturation; i++) {
-            var saturation = i / steps.saturation;
-            var color = { hue: hue, saturation: saturation, lightness: lightness };
-            colors.push(color);
-        }
-        var gradient = new Gradient(colors, true);
-        var from = center;
-        var to = center + vector;
-        var gradientColor = new Color(gradient, from, to);
-        pathC.fillColor = pathC.strokeColor = gradientColor;
-    }
-}
-
-//var mandalaLayer = new Layer({
-//    children: [paths]
-//});
-
 
 view.on('resize', function() {
     groupAxis.fitBounds(this.bounds);
     paths.position = view.center;
     view.update();
 });
-console.log(canvasSize);
 
 var groupAxis = new Group({
     children: [axisX, axisY],
-    strokeColor: 'blue'
+    strokeColor: 'grey',
+    visible: 'true'
 });
-
-function showAxis(axisOn) {
-    if (axisOn) {
-        groupAxis.visible = 'true'
-    } else {
-        groupAxis.visible = 'false'
-    }
-}
 
 function onMouseDown(event) {
     path = new Path();
-    path.strokeColor = strokeColorTest;
+    path.strokeColor = 'yellow';
     path.strokeWidth = strokeWidth;
     path.add(event.point);
     view.update();
@@ -388,42 +315,41 @@ function clonePaths(path) {
     paths.addChild(path4);
 }
 
-//showAxis(axisOn);
+
 var center;
 var radius;
 
-//console.log(strokeWidth);
+var showAxisButton = new Path.Rectangle({
+    point: [25, 105],
+    size: [30, 30],
+    fillColor: 'blue'
+});
 
-var strokeWidthButton = new Path.Circle({
+showAxisButton.onClick = function(event) {
+    groupAxis.visible = !groupAxis.visible;
+}
+
+var strokeWidthUpButton = new Path.Circle({
     center: [40, 40],
     radius: 15,
     fillColor: 'black'
 });
 
-strokeWidthButton.onClick = function(event) {
+strokeWidthUpButton.onClick = function(event) {
     strokeWidth++;  
 }
 
-var strokeColorButton = new Path.Circle({
+var strokeWidthDownButton = new Path.Circle({
     center: [40, 80],
     radius: 15,
-    fillColor: strokeColor
+    fillColor: 'black'
 });
 
-strokeColorButton.onClick = function(event) {
-    //strokeColorButton.radius = 40;
-    console.log(viewColorWheel);
-    if (viewColorWheel == 'true') {
-        console.log(viewColorWheel);
-        showWheel();
-       viewColorWheel = 'false';
-        //colorWheelLayer.activate()
-    } else {
-        viewColorWheel = 'true';
+strokeWidthDownButton.onClick = function(event) {
+    if (strokeWidth>0) {
+        strokeWidth--;
     }
 }
-
-
 
 window.app = {
 
@@ -496,11 +422,12 @@ window.app = {
                 fillColor: 'black'
             });
         }
-
     }),
 
     brushSizeTool: new Tool({
-        strokeWidth: 5,
-        
+        onClick: function(event) {
+            path.strokeWidth = 22;
+        }
+        //strokeWidth: 5,
     })
 };
