@@ -8,68 +8,42 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <link rel="stylesheet" href="spectrum.css" />
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src='spectrum.js'></script>
-
-    <script>
-        $("#colorpicker").spectrum({
-            color: "#e8e8e8",
-            flat: true,
-            showInput: true,
-            showPalette: true,
-            showSelectionPalette: true,
-            palette: [],
-            localStorageKey: "spectrum.homepage",
-            clickoutFiresChange: true,
-            change: function(color) {
-                color.toHexString();
-            }
-        });
-
-        var colorValue = $("#colorpicker").spectrum("get").color;
-        var x;
-
-        //window.globals = { colorValue, x };
-        window.onload = function() {
-            let x = Number(document.getElementById("colorpicker").value);
-            window.color = x;
-        }
-        
-
-    </script>
-    <script type="text/javascript" src="paperjs-v0.12.15/dist/paper-full.js"></script>
-    <script type="text/paperscript" src="js/myScript.js" canvas="myCanvas"></script>
 
 </head>
-<body>
-    <!--
-    <div class="toolbar">
-        <a class="selected" href="#" id="open" onclick="OpenImage()">
-            <img src="icons/image-add-regular-24.png" alt="open image" width="35"></a>
-        <a href="#" id="save" onclick="SaveImage()">
-            <img src="icons/save-regular-24.png" alt="save image" width="35"></a>
-        <a href="#" id="brush" onclick="brushTool.activate();">
-            <img src="icons/paint-regular-24.png" alt="brush" width="35"></a>
-        <a href="#" id="line" onclick="lineTool.activate()">
-            <img src="icons/minus-regular-24.png" alt="line" width="35"></a>
-        <a href="#" id="rectangle" onclick="ChangeTool('rectangle')">
-            <img src="icons/rectangle-regular-24.png" alt="rectangle" width="35"></a>
-        <a href="#" id="circle" onclick="ChangeTool('circle')">
-            <img src="icons/circle-regular-24.png" alt="circle" width="35"></a> 
-        <a href="#" id="ellipse" onclick="ChangeTool('ellipse')">
-            <img src="icons/droplet-regular-24.png" alt="elipse" width="35"></a>
-        <a href="#" id="polygon" onclick="ChangeTool('polygon')">
-            <img src="icons/polygon-regular-24.png" alt="polygon" width="35"></a>
-                 
-    </div><br>
--->
-    <a href="#" onclick="app.brushTool.activate(); return false;">Brush</a>
-    <a href="#" onclick="app.cloudTool.activate(); return false;">Clouds</a>
-    <a href="#" onclick="app.lineTool.activate(); return false;">Line</a>
-    <a href="#" onclick="app.circleTool.activate(); return false;">Circle</a>
-    <a href="#" onclick="app.colorTool.activate(); return false;">Color</a>
-    <a href="#" onclick="app.brushSizeTool.activate(); return false;">Brush Size</a>
-    <input type="color" id="colorpicker" value="#19D28B"/>
-    
-    <canvas id="myCanvas" resize></canvas>
-</body>
+    <body>
+        <canvas id="myCanvas" resize></canvas>
+        <a href="#" onclick="app.brushTool.activate(); return false;">Brush</a>
+        <a href="#" onclick="app.cloudTool.activate(); return false;">Clouds</a>
+        <a href="#" onclick="app.lineTool.activate(); return false;">Line</a>
+        <a href="#" onclick="app.circleTool.activate(); return false;">Circle</a>
+        <a href="#" onclick="app.colorTool.activate(); return false;">Color</a>
+        <a href="#" onclick="app.brushSizeTool.activate(); return false;">Brush Size</a>
+        <a href="#" onclick="app.saveTool.activate(); return false;">Save image</a>
+        <input type="text" id="colorpicker" value="yellow" />
+        <button id="download-to-svg">DOWNLOAD</button>
+
+
+
+
+        <script type="text/javascript">
+    /*
+            document.addEventListener("DOMContentLoaded", function(event) { 
+             document.getElementById("download-to-svg").onclick = function(){
+              var fileName = "custom.svg"
+              var url = "data:image/svg+xml;utf8," + encodeURIComponent(paper.project.exportSVG({asString:true}));
+              var link = document.createElement("a");
+              link.download = fileName;
+              link.href = url;
+              link.click();
+             }
+            });
+            */
+         </script>
+             <script src='spectrum.js'></script>
+
+             <script type="text/javascript" src="paperjs-v0.12.15/dist/paper-full.min.js"></script>
+             <!-- <script type="text/paperscript" src="js/myScript.js" canvas="myCanvas"></script> -->
+             <script src="script.js"></script>
+
+    </body>
 </html>
