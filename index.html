@@ -12,15 +12,26 @@
 </head>
     <body>
         <canvas id="myCanvas" resize></canvas>
-        <a href="#" onclick="app.brushTool.activate(); return false;">Brush</a>
-        <a href="#" onclick="app.cloudTool.activate(); return false;">Clouds</a>
-        <a href="#" onclick="app.lineTool.activate(); return false;">Line</a>
-        <a href="#" onclick="app.circleTool.activate(); return false;">Circle</a>
-        <a href="#" onclick="app.colorTool.activate(); return false;">Color</a>
-        <a href="#" onclick="app.brushSizeTool.activate(); return false;">Brush Size</a>
-        <a href="#" onclick="app.saveTool.activate(); return false;">Save image</a>
-        <input type="text" id="colorpicker" value="yellow" />
-        <button id="download-to-svg">DOWNLOAD</button>
+
+        <div class="toolbar">
+            <span>Choose a tool carefully</span>
+            <input type="text" id="colorpicker" value="yellow" />
+            <button class="tool-button" data-tool-name="toolBrush">DRAW BRUSH</button>
+            <button class="tool-button" data-tool-name="toolCloud">DRAW CLOUDS</button>
+            <button class="tool-button" data-tool-name="toolLine">DRAW LINES</button>
+            <button class="tool-button" data-tool-name="toolCircle">DRAW CIRCLE</button>
+            <button class="tool-button" data-tool-name="backgroundColor">BACKGROUND COLOR</button>
+            <button id="download-to-svg">DOWNLOAD</button>
+        </div>
+        <br>
+        <div class="section">
+          <span>Draw Size</span>
+          <button onclick="changeStroke(5)">5</button>
+          <button onclick="changeStroke(10)">10</button>
+          <button onclick="changeStroke(20)">20</button>
+          <button onclick="changeStroke(30)">30</button>
+          <button onclick="changeStroke(40)">40</button>
+        </div>
 
 
 
@@ -40,9 +51,7 @@
             */
          </script>
              <script src='spectrum.js'></script>
-
              <script type="text/javascript" src="paperjs-v0.12.15/dist/paper-full.min.js"></script>
-             <!-- <script type="text/paperscript" src="js/myScript.js" canvas="myCanvas"></script> -->
              <script src="script.js"></script>
 
     </body>

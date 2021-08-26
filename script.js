@@ -1,5 +1,5 @@
-var colorChoice = 'black';
-var drawSize = 20;
+let colorChoice = 'yellow';
+let strokeWidth = 1;
 
 spectrumColor = $("#colorpicker").spectrum({
 	showInput: true,
@@ -20,16 +20,16 @@ $(colorpicker).on('move.spectrum', function(e, tinyColor) {
   	paper.install(window);
   	paper.setup(document.getElementById('myCanvas'));
 
-	var pathX = new Path();
-	var start = new Point(100, 200);
+	// Main axis
+	let canvasSize = new Size(view.viewSize);
+	let pathX = new Path();
+	let start = new Point(100, 200);
 	pathX.moveTo(start);
 	pathX.lineTo(start + [ 100, 100 ]);
 
-	var canvasSize = new Size(view.viewSize);
-	var paths = new Group();
-	var axisX = new Path([0, (canvasSize.height)/2], [canvasSize.width, (canvasSize.height)/2]);
-	var axisY = new Path([canvasSize.width/2, 0], [canvasSize.width/2, canvasSize.height]);
-	var strokeWidth = 1;
+	let paths = new Group();
+	let axisX = new Path([0, (canvasSize.height)/2], [canvasSize.width, (canvasSize.height)/2]);
+	let axisY = new Path([canvasSize.width/2, 0], [canvasSize.width/2, canvasSize.height]);
 
 	view.on('resize', function() {
 		groupAxis.fitBounds(this.bounds);
@@ -43,13 +43,133 @@ $(colorpicker).on('move.spectrum', function(e, tinyColor) {
 		visible: 'true'
 	});
 
-	function onMouseDown(event) {
-		path = new Path();
-		path.strokeColor = colorChoice;
-		path.strokeWidth = strokeWidth;
-		path.add(event.point);
-		view.update();
+	// Toolstack
+	class ToolStack {
+		constructor(tools) {
+		  this.tools = tools.map(tool => tool())
+		}
+	
+		activateTool(name) {
+		  const tool = this.tools.find(tool => tool.name === name)
+		  tool.activate()
+		}
+		// add more methods here as you see fit ...
 	}
+
+	const toolBrush = () => {
+		const tool = new paper.Tool()
+		tool.name = 'toolBrush'
+		let path
+
+		tool.onMouseDown = function(event) {
+			path = new paper.Path()
+			path.strokeColor = colorChoice
+			path.strokeWidth = strokeWidth
+			path.add(event.point)
+		}
+		tool.onMouseDrag = function(event) {
+			path.add(event.point)
+		}
+		tool.onMouseUp = function(event) {
+			path.simplify(10)
+			clonePaths(path)
+		}
+		return tool
+	}
+	
+	// Tool cloud, draws clouds 
+	const toolCloud = () => {
+		const tool = new paper.Tool()
+		tool.name = 'toolCloud'
+		let path
+
+		tool.minDistance = 20
+		tool.onMouseDown = function(event) {
+			path = new paper.Path()
+			path.strokeColor = colorChoice
+			path.strokeWidth = strokeWidth
+			path.add(event.point)
+		}
+		tool.onMouseDrag = function(event) {
+		  path.arcTo(event.point)
+		}
+		tool.onMouseUp = function(event) {
+			clonePaths(path)
+		}
+	
+		return tool
+	}
+	
+	// Tool line draws lines, surprisingly
+	const toolLine = () => {
+		const tool = new paper.Tool()
+		tool.name = 'toolLine'
+		let path
+
+		tool.minDistance = 10
+		tool.onMouseDown = function(event) {
+			path = new paper.Path()
+			path.strokeColor = colorChoice
+			path.strokeWidth = strokeWidth
+			path.add(event.point)
+		}
+		tool.onMouseUp = function(event) {
+			path.add(event.point)
+			clonePaths(path)
+		}
+	
+		return tool
+	}
+
+	// Tool Circle, draws a 60px circle on mousedown TODO FIX RADIUS CHANGING
+	const toolCircle = () => {
+		const tool = new paper.Tool()
+		tool.name = 'toolCircle'
+		let pathR, path
+		
+		tool.onMouseDown = function(event) {
+			pathR = new paper.Path.Circle({
+			center: event.point,
+			})
+		}
+		//tool.onMouseDrag = function(event) {
+		//	radius = event.delta.length / 2
+		//}
+		tool.onMouseUp = function(event) {
+			path = new Path.Circle(event.middlePoint, 30)
+			path.fillColor = colorChoice
+			clonePaths(path)
+		}
+		return tool
+	}
+
+	// TODO doesn't work at all
+	const backgroundColor = () => {
+		const tool = new paper.Tool()
+		tool.name = 'backgroundColor'
+		let backgroundRect = new Path.Rectangle(0, 0, canvasSize.width, canvasSize.height)
+		
+		tool.onClick = function(event) {
+			backgroundRect.fillColor = colorChoice
+			backgroundRect.sendToBack()
+		}
+
+		return tool
+	}
+	
+	// Construct a Toolstack, passing your Tools
+	const toolStack = new ToolStack([toolBrush, toolCloud, toolLine, toolCircle, backgroundColor])
+	
+	// Activate a certain Tool
+	toolStack.activateTool('toolBrush')
+	
+	// Attach click handlers for Tool activation on all
+	// DOM buttons with class '.tool-button'
+	document.querySelectorAll('.tool-button').forEach(toolBtn => {
+		toolBtn.addEventListener('click', e => {
+		  toolStack.activateTool(e.target.getAttribute('data-tool-name'))
+		})
+	})
 
 	function onResize(event) {
 		// Whenever the window is resized, recenter the path:
@@ -58,34 +178,7 @@ $(colorpicker).on('move.spectrum', function(e, tinyColor) {
 		//Project.position = view.center;
 		//path.position = view.center;
 	// canvasSize = view.viewSize;
-		
 	}
-
-	function clonePaths(path) {
-		var path2 = path.clone();
-		var path3 = path.clone();
-		var path4 = path.clone();
-
-		var horizontalMatrix = new Matrix(-1, 0, 0, 1, 0, 0);
-		var verticalMatrix = new Matrix(1, 0, 0, -1, 0, 0);
-
-		path3.rotate(180);
-		path2.transform(horizontalMatrix);
-		path4.transform(verticalMatrix);
-		
-		path2.position.x = canvasSize.width - path.position.x;
-		path3.position.x = canvasSize.width - path.position.x;
-		path3.position.y = canvasSize.height - path.position.y;
-		path4.position.y = canvasSize.height - path.position.y;
-
-		paths.addChild(path2);
-		paths.addChild(path3);
-		paths.addChild(path4);
-	}
-
-
-	var center;
-	var radius;
 
 	var showAxisButton = new Path.Rectangle({
 		point: [25, 105],
@@ -119,22 +212,6 @@ $(colorpicker).on('move.spectrum', function(e, tinyColor) {
 		}
 	}
 
-	/*
-	// SAVE CANVAS
-	var downloadAsSVG = function (fileName) {
-	
-		if(!fileName) {
-			fileName = "paperjs_example.svg"
-		}
-	
-		var url = "data:image/svg+xml;utf8," + encodeURIComponent(paper.project.exportSVG({asString:true}));
-		
-		var link = document.createElement("a");
-		link.download = fileName;
-		link.href = url;
-		link.click();
-	}*/
-
 	var saveButton = new Path.Circle({
 		center: [40, 160],
 		radius: 15,
@@ -148,91 +225,58 @@ $(colorpicker).on('move.spectrum', function(e, tinyColor) {
 		//document.body.appendChild(project.exportSVG());
 	}
 
-	//var serializer = new paper.XMLSerializer();
-	//var svg = paper.project.exportSVG();
-	//var svg_string = serializer.serializeToString(svg);
+	function clonePaths(path) {
+		var path2 = path.clone();
+		var path3 = path.clone();
+		var path4 = path.clone();
 
-	window.onload = {
+		var horizontalMatrix = new Matrix(-1, 0, 0, 1, 0, 0);
+		var verticalMatrix = new Matrix(1, 0, 0, -1, 0, 0);
 
-		brushTool: new Tool({
-			onMouseDown: onMouseDown,
-			onMouseDrag: function(event) {
-				path.add(event.point);
-			},
-			onMouseUp: function(event) {
-				path.simplify(10);
-				clonePaths(path);
-				paths.addChild(path); 
-			}
-		}),
+		path3.rotate(180);
+		path2.transform(horizontalMatrix);
+		path4.transform(verticalMatrix);
+		
+		path2.position.x = canvasSize.width - path.position.x;
+		path3.position.x = canvasSize.width - path.position.x;
+		path3.position.y = canvasSize.height - path.position.y;
+		path4.position.y = canvasSize.height - path.position.y;
 
-		cloudTool: new Tool({
-			minDistance: 20,
-			onMouseDown: onMouseDown,
-			onMouseDrag: function(event) {
-				// Use the arcTo command to draw cloudy lines
-				path.arcTo(event.point);
-			},
-			onMouseUp: function(event) {
-				clonePaths(path);
-				paths.addChild(path); 
-			}
-		}),
-
-		// TODO live line drawing? on mouse drag view update
-		lineTool: new Tool({
-			minDistance: 10,
-			onMouseDown: onMouseDown,
-			onMouseUp: function(event) {
-				path.add(event.point);
-				clonePaths(path);
-				paths.addChild(path);
-			}
-		}),
-		// TODO make circle work smooth like vegan butter
-		circleTool: new Tool({
-			onMouseDown: function(event) {
-				center = event.point;
-				//path = new Path.Circle();
-				//path.add(event.point);
-				//view.update();
-			},
-			onMouseDrag: function(event) {
-				//radius = event.delta.length / 2;
-
-			},
-			onMouseUp: function(event) {
-				var circle = new Path.Circle(event.middlePoint, radius);
-				circle.fillColor = 'black';
-			/* path = new Path.Circle({
-					center: center,
-					radius: event.point
-				}),
-				path.strokeColor = 'black';
-				path.simplify(10);
-				clonePaths(path);
-				paths.addChild(path); */
-			}
-		}),
-
-		colorTool: new Tool({
-			onMouseDown: function(event) {
-				var path1 = new Path.Circle({
-					center: event.point,
-					radius: 25,
-					fillColor: 'black'
-				});
-			}
-		}),
-
-		brushSizeTool: new Tool({
-			onClick: function(event) {
-				path.strokeWidth = 22;
-			}
-			//strokeWidth: 5,
-		})
-	};
+		paths.addChild(path);
+		paths.addChild(path2);
+		paths.addChild(path3);
+		paths.addChild(path4);
+	}
 
 	paper.view.draw();
 }())
 
+function changeStroke(size)
+	{
+		switch(size)
+		{
+		case 5:
+			strokeWidth = 5;
+			break;
+
+		case 10:
+			strokeWidth = 10;
+			break;
+
+		case 20:
+			strokeWidth = 20;
+			break;
+
+		case 30:
+			strokeWidth = 30;
+			break;
+
+		case 40:
+			strokeWidth = 40;
+			break;
+
+		default:
+			strokeWidth = 5;
+			break;
+		}
+	}
