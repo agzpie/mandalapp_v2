@@ -1,5 +1,6 @@
 let colorChoice = 'yellow';
 let strokeWidth = 1;
+let backgroundColor = '#edeff2';
 
 spectrumColor = $("#colorpicker").spectrum({
 	showInput: true,
@@ -14,6 +15,12 @@ $(colorpicker).on('move.spectrum', function(e, tinyColor) {
 	colorChoice = tinyColor.toHexString();
 });
 
+$('tool-button').on('click', function(){
+    $('tool-button').removeClass('selected');
+    $(this).addClass('selected');
+});
+
+
 (function()
 {
   	//'use strict'; JAK JEST WLACZONE TO NIE WYSZUKUJE PATH() TODO: FIX
@@ -22,6 +29,11 @@ $(colorpicker).on('move.spectrum', function(e, tinyColor) {
 
 	// Main axis
 	let canvasSize = new Size(view.viewSize);
+
+	let backgroundRect = new Path.Rectangle(0, 0, canvasSize.width, canvasSize.height);
+	//backgroundRect.fillColor = backgroundColor;
+	backgroundRect.sendToBack;
+
 	let pathX = new Path();
 	let start = new Point(100, 200);
 	pathX.moveTo(start);
@@ -30,6 +42,14 @@ $(colorpicker).on('move.spectrum', function(e, tinyColor) {
 	let paths = new Group();
 	let axisX = new Path([0, (canvasSize.height)/2], [canvasSize.width, (canvasSize.height)/2]);
 	let axisY = new Path([canvasSize.width/2, 0], [canvasSize.width/2, canvasSize.height]);
+	let axisX2 = new Path([0, 0], [canvasSize.width, canvasSize.height]);
+	let axisY2 = new Path([0, canvasSize.height], [canvasSize.width, 0]);
+
+	axisX.strokeColor = 'grey';
+	axisY.strokeColor = 'grey';
+	axisX2.strokeColor = '#d9d9d9';
+	axisY2.strokeColor = '#d9d9d9';
+	
 
 	view.on('resize', function() {
 		groupAxis.fitBounds(this.bounds);
@@ -38,8 +58,7 @@ $(colorpicker).on('move.spectrum', function(e, tinyColor) {
 	});
 
 	var groupAxis = new Group({
-		children: [axisX, axisY],
-		strokeColor: 'grey',
+		children: [axisX2, axisY2, axisX, axisY],
 		visible: 'true'
 	});
 
@@ -53,7 +72,7 @@ $(colorpicker).on('move.spectrum', function(e, tinyColor) {
 		  const tool = this.tools.find(tool => tool.name === name)
 		  tool.activate()
 		}
-		// add more methods here as you see fit ...
+
 	}
 
 	const toolBrush = () => {
@@ -132,33 +151,53 @@ $(colorpicker).on('move.spectrum', function(e, tinyColor) {
 			center: event.point,
 			})
 		}
-		//tool.onMouseDrag = function(event) {
-		//	radius = event.delta.length / 2
-		//}
 		tool.onMouseUp = function(event) {
-			path = new Path.Circle(event.middlePoint, 30)
+			path = new Path.Circle(event.middlePoint, event.delta.length / 2)
 			path.fillColor = colorChoice
 			clonePaths(path)
 		}
 		return tool
 	}
 
-	// TODO doesn't work at all
-	const backgroundColor = () => {
+	// TOOL AXIS displays the main axis
+	const showAxis = () => {
 		const tool = new paper.Tool()
-		tool.name = 'backgroundColor'
-		let backgroundRect = new Path.Rectangle(0, 0, canvasSize.width, canvasSize.height)
+		tool.name = 'showAxis'
 		
-		tool.onClick = function(event) {
-			backgroundRect.fillColor = colorChoice
-			backgroundRect.sendToBack()
+		tool.onMouseMove = function(event) {
+			groupAxis.visible = true
 		}
 
+			groupAxis.visible = false
+	
+		return tool
+	}
+
+	// TOOL AXIS displays the main axis
+	const hideAxis = () => {
+		const tool = new paper.Tool()
+		tool.name = 'hideAxis'
+		
+		tool.onMouseMove = function(event) {
+			groupAxis.visible = false
+		}
+		
+		return tool
+	}
+
+
+	// TOOL UNDO NIE DZIAŁA
+	const undo = () => {
+		const tool = new paper.Tool()
+		tool.name = 'undo'
+			paths.visible = false
+		
+		
 		return tool
 	}
 	
 	// Construct a Toolstack, passing your Tools
-	const toolStack = new ToolStack([toolBrush, toolCloud, toolLine, toolCircle, backgroundColor])
+	const toolStack = new ToolStack([toolBrush, toolCloud, toolLine, toolCircle, showAxis, hideAxis, undo])
 	
 	// Activate a certain Tool
 	toolStack.activateTool('toolBrush')
@@ -169,61 +208,7 @@ $(colorpicker).on('move.spectrum', function(e, tinyColor) {
 		toolBtn.addEventListener('click', e => {
 		  toolStack.activateTool(e.target.getAttribute('data-tool-name'))
 		})
-	})
-
-	function onResize(event) {
-		// Whenever the window is resized, recenter the path:
-		//axisX.position = view.center;
-		//axisY.position = view.center;
-		//Project.position = view.center;
-		//path.position = view.center;
-	// canvasSize = view.viewSize;
-	}
-
-	var showAxisButton = new Path.Rectangle({
-		point: [25, 105],
-		size: [30, 30],
-		fillColor: 'blue'
-	});
-
-	showAxisButton.onClick = function(event) {
-		groupAxis.visible = !groupAxis.visible;
-	}
-
-	var strokeWidthUpButton = new Path.Circle({
-		center: [40, 40],
-		radius: 15,
-		fillColor: 'black'
-	});
-
-	strokeWidthUpButton.onClick = function(event) {
-		strokeWidth++;  
-	}
-
-	var strokeWidthDownButton = new Path.Circle({
-		center: [40, 80],
-		radius: 15,
-		fillColor: 'black'
-	});
-
-	strokeWidthDownButton.onClick = function(event) {
-		if (strokeWidth>0) {
-			strokeWidth--;
-		}
-	}
-
-	var saveButton = new Path.Circle({
-		center: [40, 160],
-		radius: 15,
-		fillColor: 'green'
-	});
-
-	saveButton.onClick = function(event) {
-		var svg = paper.project.exportSVG({asString: true});
-		var blob = new Blob([svg], {type:     "image/svg+xml;charset=utf-8"});
-		saveAs(blob, 'image.svg');
-		//document.body.appendChild(project.exportSVG());
-	}
+	})	
 
 	function clonePaths(path) {
 		var path2 = path.clone();
@@ -242,11 +227,13 @@ $(colorpicker).on('move.spectrum', function(e, tinyColor) {
 		path3.position.y = canvasSize.height - path.position.y;
 		path4.position.y = canvasSize.height - path.position.y;
 
-		paths.addChild(path);
-		paths.addChild(path2);
-		paths.addChild(path3);
-		paths.addChild(path4);
+		paths.addChildren(path, path2, path3, path4);
 	}
+
+	function clearProject() {
+		paths.removeChildren();
+	}
+
 
 	paper.view.draw();
 }())
@@ -255,6 +242,10 @@ function changeStroke(size)
 	{
 		switch(size)
 		{
+		case 2:
+			strokeWidth = 2;
+			break;
+
 		case 5:
 			strokeWidth = 5;
 			break;
@@ -263,20 +254,37 @@ function changeStroke(size)
 			strokeWidth = 10;
 			break;
 
+		case 15:
+			strokeWidth = 15;
+			break;
+
 		case 20:
 			strokeWidth = 20;
 			break;
 
-		case 30:
-			strokeWidth = 30;
-			break;
-
-		case 40:
-			strokeWidth = 40;
-			break;
-
 		default:
-			strokeWidth = 5;
+			strokeWidth = 2;
 			break;
 		}
 	}
+
+function prjClear() {
+	//project.clear();
+	//paper.view.draw();
+	project.clearProject();
+	
+}
+
+function finClear() {
+	document.getElementById('imgLocation').innerHTML = "";
+}
+
+function createPNG() {
+	finClear();
+
+	let canvas = document.getElementById('myCanvas');
+	let img = new Image();
+	img.src = canvas.toDataURL();
+	document.getElementById('imgLocation').innerHTML =
+	"<a href='"+img.src+"' download><img src='"+img.src+"'></a>";
+}

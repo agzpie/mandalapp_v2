@@ -6,4 +6,86 @@ canvas {
 body, html {
     height: 100%;
     margin: 0;
+    background-color: #edeff2;
+    font-family: 'Roboto';
 }
+
+.toolbar {
+    width:fit-content;
+    background-color: #dbdbdb;
+    padding: 8px;
+}
+
+.toolbar .tool-button {
+    background-color: #ffffff; /* Green */
+    border: 1px solid rgb(158, 189, 158);
+    color: black;
+    padding: 12px 16px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+.toolbar .tool-button:hover {
+    background-color: rgb(158, 189, 158);
+    color: white;
+}
+
+.toolbar .tool-button:active {
+    background-color: rgb(90, 107, 90);
+    border: 3px solid rgb(158, 189, 158);
+    color: white;
+}
+
+/* Dropdown Button */
+.dropbtn {
+    background-color: #d8e2de;
+    border: 1px solid #9cb3aa;
+    color: black;
+    padding: 12px;
+    font-size: 14px;
+  }
+  
+  /* The container <div> - needed to position the dropdown content */
+  .dropdown {
+    position: relative;
+    display: inline-block;
+  }
+  
+  /* Dropdown Content (Hidden by Default) */
+  .dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    width: 260px;
+    padding: 4px;
+    box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+    z-index: 1;
+  }
+  
+  /* Links inside the dropdown */
+  .dropdown-content button {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: inline;
+  }
+  
+  /* Change color of dropdown links on hover */
+  .dropdown-content a:hover {
+      background-color: #ddd;
+    }
+  
+  /* Show the dropdown menu on hover */
+  .dropdown:hover .dropdown-content {
+      display: block;
+    }
+  
+  /* Change the background color of the dropdown button when the dropdown content is shown */
+  .dropdown:hover .dropbtn {
+      background-color: rgb(158, 189, 158);
+      color: white;
+    }

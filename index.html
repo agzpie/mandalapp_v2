@@ -13,46 +13,38 @@
     <body>
         <canvas id="myCanvas" resize></canvas>
 
+
+
         <div class="toolbar">
-            <span>Choose a tool carefully</span>
+            <div class="dropdown">
+                <button class="dropbtn">Brush size:  &#9662;</button>
+                <div class="dropdown-content">
+                    <button onclick="changeStroke(2)">2</button>
+                    <button onclick="changeStroke(5)">5</button>
+                    <button onclick="changeStroke(10)">10</button>
+                    <button onclick="changeStroke(15)">15</button>
+                    <button onclick="changeStroke(20)">20</button>
+                </div>
+              </div>
             <input type="text" id="colorpicker" value="yellow" />
-            <button class="tool-button" data-tool-name="toolBrush">DRAW BRUSH</button>
-            <button class="tool-button" data-tool-name="toolCloud">DRAW CLOUDS</button>
-            <button class="tool-button" data-tool-name="toolLine">DRAW LINES</button>
-            <button class="tool-button" data-tool-name="toolCircle">DRAW CIRCLE</button>
-            <button class="tool-button" data-tool-name="backgroundColor">BACKGROUND COLOR</button>
-            <button id="download-to-svg">DOWNLOAD</button>
-        </div>
-        <br>
-        <div class="section">
-          <span>Draw Size</span>
-          <button onclick="changeStroke(5)">5</button>
-          <button onclick="changeStroke(10)">10</button>
-          <button onclick="changeStroke(20)">20</button>
-          <button onclick="changeStroke(30)">30</button>
-          <button onclick="changeStroke(40)">40</button>
+            <button class="tool-button" data-tool-name="toolBrush">brush</button>
+            <button class="tool-button" data-tool-name="toolCloud">clouds</button>
+            <button class="tool-button" data-tool-name="toolLine">line</button>
+            <button class="tool-button" data-tool-name="toolCircle">circle</button>
+            <button class="tool-button" data-tool-name="showAxis">Show axis</button>
+            <button class="tool-button" data-tool-name="hideAxis">Hide Axis</button>
+            <button class="tool-button" data-tool-name="undo">UNDO</button>
+            <button class="tool-button" onclick="createPNG()" download="img">Create PNG</button>
         </div>
 
+        <div id="finArea">
+            <h3><span id="imgInstructions"> Click image to download</span></h3>
+            <div id="imgLocation">
+            </div>
+        </div>
 
-
-
-        <script type="text/javascript">
-    /*
-            document.addEventListener("DOMContentLoaded", function(event) { 
-             document.getElementById("download-to-svg").onclick = function(){
-              var fileName = "custom.svg"
-              var url = "data:image/svg+xml;utf8," + encodeURIComponent(paper.project.exportSVG({asString:true}));
-              var link = document.createElement("a");
-              link.download = fileName;
-              link.href = url;
-              link.click();
-             }
-            });
-            */
-         </script>
-             <script src='spectrum.js'></script>
-             <script type="text/javascript" src="paperjs-v0.12.15/dist/paper-full.min.js"></script>
-             <script src="script.js"></script>
-
+        <script src='spectrum.js'></script>
+        <script type="text/javascript" src="paperjs-v0.12.15/dist/paper-full.min.js"></script>
+        <script src="script.js"></script>
     </body>
 </html>
