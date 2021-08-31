@@ -29,6 +29,9 @@ $('tool-button').on('click', function(){
 
 	// Main axis
 	let canvasSize = new Size(view.viewSize);
+	let center = new Point(canvasSize.width/2, canvasSize.height/2);
+	let shorterSide = new Path();
+	let longerSide = new Path();
 
 	let backgroundRect = new Path.Rectangle(0, 0, canvasSize.width, canvasSize.height);
 	//backgroundRect.fillColor = backgroundColor;
@@ -42,14 +45,48 @@ $('tool-button').on('click', function(){
 	let paths = new Group();
 	let axisX = new Path([0, (canvasSize.height)/2], [canvasSize.width, (canvasSize.height)/2]);
 	let axisY = new Path([canvasSize.width/2, 0], [canvasSize.width/2, canvasSize.height]);
-	let axisX2 = new Path([0, 0], [canvasSize.width, canvasSize.height]);
-	let axisY2 = new Path([0, canvasSize.height], [canvasSize.width, 0]);
+
+	if (axisX.length > axisY.length) {
+		shorterSide.copyContent(axisY);
+		longerSide.copyContent(axisX);
+	} else {
+		shorterSide.copyContent(axisX);
+		longerSide.copyContent(axisY);
+	}
+
+	let axisX2 = new Path();
+	axisX2.copyContent(longerSide);
+	axisX2.rotate(45);
+
+	let axisY2 = new Path();
+	axisY2.copyContent(longerSide);
+	axisY2.rotate(135);
+
+	let axisC = new Path.Circle({
+		center: center,
+		radius: shorterSide.length/2,
+		strokeColor: '#d9d9d9'
+	});
+	let axisC2 = new Path.Circle({
+		center: center,
+		radius: shorterSide.length/4,
+		strokeColor: '#d9d9d9'
+	});
+	let axisC3 = new Path.Circle({
+		center: center,
+		radius: shorterSide.length/8,
+		strokeColor: '#d9d9d9'
+	});
+	let axisC4 = new Path.Circle({
+		center: center,
+		radius: shorterSide.length*0.375,
+		strokeColor: '#d9d9d9'
+	});
 
 	axisX.strokeColor = 'grey';
 	axisY.strokeColor = 'grey';
 	axisX2.strokeColor = '#d9d9d9';
 	axisY2.strokeColor = '#d9d9d9';
-	
 
 	view.on('resize', function() {
 		groupAxis.fitBounds(this.bounds);
@@ -58,7 +95,7 @@ $('tool-button').on('click', function(){
 	});
 
 	var groupAxis = new Group({
-		children: [axisX2, axisY2, axisX, axisY],
+		children: [axisC, axisC2, axisC3, axisC4, axisX2, axisY2, axisX, axisY],
 		visible: 'true'
 	});
 
@@ -319,11 +356,15 @@ $(function() {
 	  $('#pauseTimer').trigger("click");
 	  $('#fullName2').html(fullName);
 	  $('#diagnosis2').html(diagnosis);
-	  $('#time').html(str);
-		
+	  $('#time').html(str);		
 	});
 });
 
+$(function() {
+	$('#btnOk').click(function() {
+		$('#endModal').modal('hide');
+	});
+});
 
 // TIMER
 let hour = 0;
@@ -378,4 +419,33 @@ function timer() {
   
 function returnData(input) {
 	return input > 10 ? input : `0${input}`
+}
+
+// FILE SAVER
+function saveDataToFile() {
+	let blob = new Blob(["User's name: ", fullName, "\nDiagnosis: ", diagnosis, "\nSession time: ", hour, "h", minute, "min", second, "sec"], { type: "text/plain;charset=utf-8" });
+	saveAs(blob, "userData.txt");	
+}
+
+function saveCanvasToFile() {
+	let canvas = document.getElementById("myCanvas");
+	canvas.toBlob(function(blob) {
+		saveAs(blob, "drawing.png");
+	});
+}
+
+// COLLAPSIBLE
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
 }

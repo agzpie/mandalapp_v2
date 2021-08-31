@@ -11,7 +11,7 @@
     <link rel="stylesheet" type="text/css" href="style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
+    <script src="node_modules/file-saver/src/FileSaver.js"></script>
 
 </head>
     <body>
@@ -55,7 +55,7 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">x</span></button>
                         <div class="modal-body">
                                 
-                            <!--Login Content-->
+                            <!--Data Content-->
                             <div class="modal-body">
                                 <h3 class="title">You finished your session!</h3>
                                 <p class="description">Your name: </p>
@@ -64,17 +64,16 @@
                                 <h4 id="diagnosis2"></h4>
                                 <p class="description">Your therapy lasted for: </p>
                                 <h4 id="time"></h4>
-                                <br>
+                                </br>
                                 
-                                <button type="button" class="btn" >OK</button>
+                                <button type="button" id="btnExport" class="btn" onclick="saveDataToFile(); saveCanvasToFile()">Export your data</button>
+                                <!--<button type="button" id="btnOk" class="toolbar tool-button" >OK</button> -->
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
-
-
 
         <div class="toolbar">
             <div class="dropdown">
@@ -88,43 +87,42 @@
                 </div>
             </div>
             <input type="text" id="colorpicker" value="yellow" />
-            <button class="tool-button" data-tool-name="toolBrush">Brush</button>
-            <button class="tool-button" data-tool-name="toolCloud">Clouds</button>
-            <button class="tool-button" data-tool-name="toolLine">Line</button>
-            <button class="tool-button" data-tool-name="toolCircle">Circle</button>
-            <button class="tool-button" data-tool-name="showAxis">Show axis</button>
-            <button class="tool-button" data-tool-name="hideAxis">Hide Axis</button>
-            <button class="tool-button" onclick="createPNG()" download="img">Create PNG</button>
+            <button class="tool-button" data-tool-name="toolBrush">Brush &#8467;</button>
+            <button class="tool-button" data-tool-name="toolCloud">Clouds &#9729;</button>
+            <button class="tool-button" data-tool-name="toolLine">Line &#8725;</button>
+            <button class="tool-button" data-tool-name="toolCircle">Circle &#10102;</button>
+            <button class="tool-button" data-tool-name="showAxis">Show axis &#8853;</button>
+            <button class="tool-button" data-tool-name="hideAxis">Hide Axis &#8857;</button>
+            <button class="tool-button" onclick="saveCanvasToFile()" download="img">Save drawing &#10515;</button>
         </div> <br>
 
         <div class="toolbar">
             <button type="button" id="btnLaunch" class="form-button" data-toggle="modal" data-target="#startModal">Start therapy session</button>
             <button type="button" id="btnEndSession" class="form-button" data-toggle="modal" data-target="#endModal">End therapy session</button>
         </div>
+        </br>
         
         <div class="your-data">
-            <h3>Your data</h3>
-            <p id="dataName"> </p>
-            <p id="dataDiagnosis"> </p>
-
-            <form name="form_main">
-                <div>
-                    <h4>Timer: 
-                        <span id="hour">00</span>:<span id="minute">00</span>:<span id="second">00</span>:<span id="millisecond">000</span>
-                    </h4>
-                </div>
-                <br/>
-                <button type="button" class="timer" id="startTimer" name="start">start</button>
-                <button type="button" class="timer" id="pauseTimer" name="pauseTimer">pause</button>
-                <button type="button" class="timer" id="resetTimer" name="resetTimer">reset</button>
-            </form>
-        </div>        
-
-        <div id="finArea" class="your-data">
-            <h4><span id="imgInstructions">Click image to download</span></h4>
-            <div id="imgLocation">
+            <button type="button" class="collapsible">Your data</button> 
+            <div class="collapsible-content">
+                <p id="dataName"> </p>
+                <p id="dataDiagnosis"> </p>
+    
+                <form name="form_main">
+                    <div>
+                        <h4>Timer: 
+                            <span id="hour">00</span>:<span id="minute">00</span>:<span id="second">00</span>:<span id="millisecond">000</span>
+                        </h4>
+                    </div>
             </div>
-        </div>
+            
+        </div></br>      
+        
+                    <button type="button" class="timer" id="startTimer" name="start">start</button>
+                    <button type="button" class="timer" id="pauseTimer" name="pauseTimer">pause</button>
+                    <button type="button" class="timer" id="resetTimer" name="resetTimer">reset</button>
+                    
+                </form>
 
         <script src='spectrum.js'></script>
         <script type="text/javascript" src="paperjs-v0.12.15/dist/paper-full.min.js"></script>
