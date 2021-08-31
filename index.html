@@ -5,13 +5,74 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link rel="stylesheet" type="text/css" href="style.css">
+    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <link rel="stylesheet" href="spectrum.css" />
+    <link rel="stylesheet" type="text/css" href="style.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 
 </head>
     <body>
         <canvas id="myCanvas" resize></canvas>
+
+       
+        <div class="modal-box">
+
+            <!-- Start therapy modal -->
+            <div class="modal fade" id="startModal" tabindex="-1" role="dialog" aria-labelledby="startModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content clearfix">
+                        <!--Close button-->
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">x</span></button>
+                        <div class="modal-body">
+                                
+                            <!--Login Content-->
+                            <div class="modal-body">
+                                <h3 class="title">Start session</h3>
+                                <p class="description">Start therapy by entering your full name and diagnosis (if applicable) here</p>
+                                <div class="form-group">
+                                    <span class="input-icon"><i class="fa fa-user"></i></span>
+                                    <input type="text" class="form-control" name="fullName" id="fullName" placeholder="Full name">
+                                </div>
+                                <div class="form-group">
+                                    <span class="input-icon"><i class="fas fa-key"></i></span>
+                                    <input type="text" class="form-control" name="diagnosis" id="diagnosis" placeholder="Diagnosis">
+                                </div>
+                                <button type="button" id="btnSave" class="btn" >Start</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- End therapy modal -->
+            <div class="modal fade" id="endModal" tabindex="-1" role="dialog" aria-labelledby="endModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content clearfix">
+                        <!--Close button-->
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">x</span></button>
+                        <div class="modal-body">
+                                
+                            <!--Login Content-->
+                            <div class="modal-body">
+                                <h3 class="title">You finished your session!</h3>
+                                <p class="description">Your name: </p>
+                                <h4 id="fullName2"></h4>
+                                <p class="description">Your diagnosis: </p>
+                                <h4 id="diagnosis2"></h4>
+                                <p class="description">Your therapy lasted for: </p>
+                                <h4 id="time"></h4>
+                                <br>
+                                
+                                <button type="button" class="btn" >OK</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
 
 
@@ -25,20 +86,42 @@
                     <button onclick="changeStroke(15)">15</button>
                     <button onclick="changeStroke(20)">20</button>
                 </div>
-              </div>
+            </div>
             <input type="text" id="colorpicker" value="yellow" />
-            <button class="tool-button" data-tool-name="toolBrush">brush</button>
-            <button class="tool-button" data-tool-name="toolCloud">clouds</button>
-            <button class="tool-button" data-tool-name="toolLine">line</button>
-            <button class="tool-button" data-tool-name="toolCircle">circle</button>
+            <button class="tool-button" data-tool-name="toolBrush">Brush</button>
+            <button class="tool-button" data-tool-name="toolCloud">Clouds</button>
+            <button class="tool-button" data-tool-name="toolLine">Line</button>
+            <button class="tool-button" data-tool-name="toolCircle">Circle</button>
             <button class="tool-button" data-tool-name="showAxis">Show axis</button>
             <button class="tool-button" data-tool-name="hideAxis">Hide Axis</button>
-            <button class="tool-button" data-tool-name="undo">UNDO</button>
             <button class="tool-button" onclick="createPNG()" download="img">Create PNG</button>
-        </div>
+        </div> <br>
 
-        <div id="finArea">
-            <h3><span id="imgInstructions"> Click image to download</span></h3>
+        <div class="toolbar">
+            <button type="button" id="btnLaunch" class="form-button" data-toggle="modal" data-target="#startModal">Start therapy session</button>
+            <button type="button" id="btnEndSession" class="form-button" data-toggle="modal" data-target="#endModal">End therapy session</button>
+        </div>
+        
+        <div class="your-data">
+            <h3>Your data</h3>
+            <p id="dataName"> </p>
+            <p id="dataDiagnosis"> </p>
+
+            <form name="form_main">
+                <div>
+                    <h4>Timer: 
+                        <span id="hour">00</span>:<span id="minute">00</span>:<span id="second">00</span>:<span id="millisecond">000</span>
+                    </h4>
+                </div>
+                <br/>
+                <button type="button" class="timer" id="startTimer" name="start">start</button>
+                <button type="button" class="timer" id="pauseTimer" name="pauseTimer">pause</button>
+                <button type="button" class="timer" id="resetTimer" name="resetTimer">reset</button>
+            </form>
+        </div>        
+
+        <div id="finArea" class="your-data">
+            <h4><span id="imgInstructions">Click image to download</span></h4>
             <div id="imgLocation">
             </div>
         </div>

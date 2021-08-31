@@ -366,7 +366,7 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
     margin:0px;
     overflow:hidden;
     cursor:pointer;
-    padding: 9px;
+    padding: 7px;
     display:inline-block;
     *zoom: 1;
     *display: inline;
@@ -381,19 +381,19 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 }
 .sp-replacer.sp-disabled {
     cursor:default;
-    border-color: silver;
+    border-color: 91a88d;
     color: silver;
 }
 .sp-dd {
-    padding: 2px 0;
+    padding: 4px 0;
     height: 16px;
     line-height: 16px;
     float:left;
-    font-size:10px;
+    font-size:8px;
 }
 .sp-preview {
     position:relative;
-    width:25px;
+    width: 25px;
     height: 20px;
     border: solid 1px #91a88d;
     margin-right: 5px;

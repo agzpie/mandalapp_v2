@@ -272,7 +272,6 @@ function prjClear() {
 	//project.clear();
 	//paper.view.draw();
 	project.clearProject();
-	
 }
 
 function finClear() {
@@ -287,4 +286,96 @@ function createPNG() {
 	img.src = canvas.toDataURL();
 	document.getElementById('imgLocation').innerHTML =
 	"<a href='"+img.src+"' download><img src='"+img.src+"'></a>";
+}
+
+function openForm() {
+	document.getElementById("myForm").style.display = "block";
+}
+  
+function closeForm() {
+	document.getElementById("myForm").style.display = "none";
+}
+
+// Start therapy modal: pass name and diagnosis, trigger timer start
+let fullName;
+let diagnosis;
+
+$(function() {
+	$('#btnSave').click(function() {
+	  fullName = $('#fullName').val();
+	  diagnosis = $('#diagnosis').val();
+	  $('#dataName').html(fullName);
+	  $('#dataDiagnosis').html(diagnosis);
+	  $('#resetTimer').trigger("click");
+	  $('#startTimer').trigger("click");
+	  $('#startModal').modal('hide');
+	});
+});
+
+// End therapy modal: trigger timer pause and display data
+$(function() {
+	$('#btnEndSession').click(function() {
+		let str = hour + " hours " + minute + " minutes and " + second + " seconds";
+	  $('#pauseTimer').trigger("click");
+	  $('#fullName2').html(fullName);
+	  $('#diagnosis2').html(diagnosis);
+	  $('#time').html(str);
+		
+	});
+});
+
+
+// TIMER
+let hour = 0;
+let minute = 0;
+let second = 0;
+let millisecond = 0;
+
+let cron;
+
+document.form_main.startTimer.onclick = () => startTimer();
+document.form_main.pauseTimer.onclick = () => pauseTimer();
+document.form_main.resetTimer.onclick = () => resetTimer();
+
+function startTimer() {
+	pauseTimer();
+	cron = setInterval(() => { timer(); }, 10);
+}
+  
+function pauseTimer() {
+	clearInterval(cron);
+}
+  
+function resetTimer() {
+	hour = 0;
+	minute = 0;
+	second = 0;
+	millisecond = 0;
+	document.getElementById('hour').innerText = '00';
+	document.getElementById('minute').innerText = '00';
+	document.getElementById('second').innerText = '00';
+	document.getElementById('millisecond').innerText = '000';
+}
+
+function timer() {
+	if ((millisecond += 10) == 1000) {
+	  millisecond = 0;
+	  second++;
+	}
+	if (second == 60) {
+	  second = 0;
+	  minute++;
+	}
+	if (minute == 60) {
+	  minute = 0;
+	  hour++;
+	}
+	document.getElementById('hour').innerText = returnData(hour);
+	document.getElementById('minute').innerText = returnData(minute);
+	document.getElementById('second').innerText = returnData(second);
+	document.getElementById('millisecond').innerText = returnData(millisecond);
+}
+  
+function returnData(input) {
+	return input > 10 ? input : `0${input}`
 }
