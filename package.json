@@ -1,0 +1,38 @@
+{
+  "dependencies": {
+    "file-saver": "^2.0.5",
+    "paper": "^0.12.15",
+    "spectrum-colorpicker": "^1.8.1"
+  },
+  "name": "mandalapp",
+  "version": "1.0.0",
+  "main": "script.js",
+  "scripts": {
+    "build": "run-script-os",
+    "build:nix": "npm install && npm run build:icons && npm run build:node_modules && npm run build:scripts && npm run build:css && npm run build:sites",
+    "build:css": "cp -R css build",
+    "build:icons": "cp -R icons build",
+    "build:node_modules": "cp -R node_modules build",
+    "build:scripts": "cp -R scripts build",
+    "build:sites": "cp index.html build",
+    "build:win32": "npm install && npm run build:win:icons && npm run build:win:scripts && npm run build:win:css && npm run build:win:sites",
+    "build:win:css": "xcopy /e /y /k /i css build\\css",
+    "build:win:icons": "xcopy /e /y /k /i icons build\\icons",
+    "build:win:node_modules": "xcopy /e /y /k /i node_modules build\\node_modules",
+    "build:win:scripts": "xcopy /e /y /k /i scripts build\\icons",
+    "build:win:sites": "xcopy index.html build"
+  },
+  "keywords": [
+    "mandala",
+    "mandalapp",
+    "therapy",
+    "art-therapy",
+    "drawing"
+  ],
+  "author": "agzpie",
+  "description": "Mandalapp",
+  "devDependencies": {
+    "eslint": "^7.32.0",
+    "run-script-os": "^1.1.6"
+  }
+}
