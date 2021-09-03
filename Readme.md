@@ -29,5 +29,7 @@ open index.html
 >npm run build
 
 # Development
+## Install ESLint as global tool
+>npm i --global eslint
 ## See ESLint errors and style suggestions
->eslint src
+>eslint scripts
