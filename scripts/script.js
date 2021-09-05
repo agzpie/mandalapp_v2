@@ -189,7 +189,8 @@ $('tool-button').on('click', function () {
 		}
 		tool.onMouseUp = function (event) {
 			path = new Path.Circle(event.middlePoint, event.delta.length / 2)
-			path.fillColor = colorChoice
+			path.strokeColor = colorChoice
+			path.strokeWidth = strokeWidth
 			clonePaths(path)
 		}
 		return tool

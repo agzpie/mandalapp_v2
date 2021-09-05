@@ -83,8 +83,9 @@
     </div>
 
     <div class="toolbar">
+        <input type="text" id="colorpicker" value="yellow" />
         <div class="dropdown">
-            <button class="dropbtn">Brush size: &#9662;</button>
+            <button class="dropbtn downArrow">Brush size: </button>
             <div class="dropdown-content">
                 <button onclick="changeStroke(2)">2</button>
                 <button onclick="changeStroke(5)">5</button>
@@ -93,27 +94,27 @@
                 <button onclick="changeStroke(20)">20</button>
             </div>
         </div>
-        <input type="text" id="colorpicker" value="yellow" />
-        <button class="tool-button" data-tool-name="toolBrush">Brush &#8467;</button>
-        <button class="tool-button" data-tool-name="toolCloud">Clouds &#9729;</button>
-        <button class="tool-button" data-tool-name="toolLine">Line &#8725;</button>
-        <button class="tool-button" data-tool-name="toolCircle">Circle &#10102;</button>
-        <button class="tool-button" data-tool-name="showAxis">Show axis &#8853;</button>
-        <button class="tool-button" data-tool-name="hideAxis">Hide Axis &#8857;</button>
-        <button class="tool-button" onclick="saveCanvasToFile()" download="img">Save drawing &#10515;</button>
+        
+        <button class="tool-button brush" data-tool-name="toolBrush">Brush </button>
+        <button class="tool-button cloud" data-tool-name="toolCloud">Clouds </button>
+        <button class="tool-button line" data-tool-name="toolLine">Line </button>
+        <button class="tool-button circle" data-tool-name="toolCircle">Circle </button>
+        <button class="tool-button showAxis" data-tool-name="showAxis">Show axis </button>
+        <button class="tool-button hideAxis" data-tool-name="hideAxis">Hide Axis </button>
+        <button class="tool-button download" onclick="saveCanvasToFile()" download="img">Save drawing </button>
     </div>
     <br>
 
     <div class="toolbar">
-        <button type="button" id="btnLaunch" class="form-button" data-toggle="modal" data-target="#startModal">Start
-            therapy session</button>
-        <button type="button" id="btnEndSession" class="form-button" data-toggle="modal" data-target="#endModal">End
-            therapy session</button>
+        <button type="button" id="btnLaunch" class="form-button start" data-toggle="modal" data-target="#startModal">Start
+            therapy </button>
+        <button type="button" id="btnEndSession" class="form-button end" data-toggle="modal" data-target="#endModal">End
+            therapy </button>
     </div>
     </br>
 
     <div class="your-data">
-        <button type="button" class="collapsible">Your data</button>
+        <button type="button" class="collapsible">Your data </button>
         <div class="collapsible-content">
             <p id="dataName"> </p>
             <p id="dataDiagnosis"> </p>

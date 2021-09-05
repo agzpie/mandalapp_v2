@@ -33,6 +33,41 @@ body, html {
     cursor: pointer;
 }
 
+.brush::after {
+    content: url('../icons/brush.svg');
+    vertical-align: middle;
+}
+
+.cloud::after {
+    content: url('../icons/cloud.svg');
+    vertical-align: middle;
+}
+
+.line::after {
+    content: url('../icons/line.svg');
+    vertical-align: middle;
+}
+
+.circle::after {
+    content: url('../icons/circle.svg');
+    vertical-align: middle;
+}
+
+.showAxis::after {
+    content: url('../icons/showAxis.svg');
+    vertical-align: middle;
+}
+
+.hideAxis::after {
+    content: url('../icons/hideAxis.svg');
+    vertical-align: middle;
+}
+
+.download::after {
+    content: url('../icons/downloadImg.svg');
+    vertical-align: middle;
+}
+
 .toolbar .tool-button:hover {
     color: white;
     background: linear-gradient(to right, #84a584, #759175, #84a584);
@@ -78,6 +113,10 @@ body, html {
     padding: 10px 14px;
     text-decoration: none;
     display: inline;
+  }
+
+  .downArrow::after {
+    content: url(../icons/downArrow.svg);
   }
   
   /* Change color of dropdown links on hover */
@@ -147,11 +186,23 @@ body, html {
         background: linear-gradient(to right, #759175, #618361, #759175);
         font-size: 18px;
         text-transform: capitalize;
+        vertical-align: sub;
         padding: 10px 14px;
         border: 1px solid rgb(73, 73, 73);
         box-shadow: 0 0 20px rgba(54, 112, 64, 0.15);
         display: inline-block;
         transition: all 0.2s ease 0s;
+        
+    }
+
+    .start::after {
+        content: url(../icons/start.svg);
+        vertical-align: middle;
+    }
+
+    .end::after {
+        content: url(../icons/end.svg);
+        vertical-align: middle;
     }
 
     .form-button:hover {
