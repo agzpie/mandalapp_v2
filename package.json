@@ -20,7 +20,7 @@
     "build:win:icons": "xcopy /e /y /k /i icons build\\icons",
     "build:win:node_modules": "xcopy /e /y /k /i node_modules build\\node_modules",
     "build:win:scripts": "xcopy /e /y /k /i scripts build\\icons",
-    "build:win:sites": "xcopy index.html build"
+    "build:win:sites": "xcopy /y index.html build"
   },
   "keywords": [
     "mandala",
