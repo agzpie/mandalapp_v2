@@ -9,17 +9,19 @@
   "main": "script.js",
   "scripts": {
     "build": "run-script-os",
-    "build:nix": "npm install && npm run build:icons && npm run build:node_modules && npm run build:scripts && npm run build:css && npm run build:sites",
+    "build:nix": "npm run build:clean && npm install && npm run build:icons && npm run build:node_modules && npm run build:scripts && npm run build:css && npm run build:sites",
+    "build:clean": "rm -rf build",
     "build:css": "cp -R css build",
     "build:icons": "cp -R icons build",
     "build:node_modules": "cp -R node_modules build",
     "build:scripts": "cp -R scripts build",
     "build:sites": "cp index.html build",
-    "build:win32": "npm install && npm run build:win:icons && npm run build:win:scripts && npm run build:win:css && npm run build:win:sites",
+    "build:win32": "npm run build:win:clean && npm install && npm run build:win:icons && npm run build:win:node_modules && npm run build:win:scripts && npm run build:win:css && npm run build:win:sites",
+    "build:win:clean": "if exist build rm -R build",
     "build:win:css": "xcopy /e /y /k /i css build\\css",
     "build:win:icons": "xcopy /e /y /k /i icons build\\icons",
     "build:win:node_modules": "xcopy /e /y /k /i node_modules build\\node_modules",
-    "build:win:scripts": "xcopy /e /y /k /i scripts build\\icons",
+    "build:win:scripts": "xcopy /e /y /k /i scripts build\\scripts",
     "build:win:sites": "xcopy /y index.html build"
   },
   "keywords": [
