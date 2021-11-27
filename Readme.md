@@ -1,5 +1,8 @@
 # Description
-Mandalapp <TODO>
+Mandalapp - a therapeutical application using vector graphics for drawing mandalas, implemented using paper.js library. The application is the result of a Bachelor of Engineering diploma project.
+
+# Demo
+https://lemon-sky-0c0d78910.azurestaticapps.net/
 
 # Technical aspects
 The application uses pure javascript with no frameworks. The code is executed by the browser. Tested in Google Chrome, Mozilla Firefox, Microsoft Edge.
